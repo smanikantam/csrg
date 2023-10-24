@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.forms import FileField
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 # Create your views here.
 from django.shortcuts import render
@@ -26,9 +29,7 @@ def get_human_readable_file_size(file_path):
 
 def index(request):
     raw_data=Fyles.objects.all()
-    for i in raw_data:
-        print(i.file.name)
-    data=[[x.name,x.file.name,x.file.name[6:],x.added_by,x.date,x.file_size] for x in raw_data]
+    data=[[x.name,x.added_by,x.date] for x in raw_data]
     return render(request,"index.html",{"data":data})
 
 def file_list(request):
@@ -37,19 +38,39 @@ def file_list(request):
 
 def upload_file(request):
     if request.method == 'POST':
-        file=Fyles()
-        file.name=request.POST["name"]
-        file.added_by=request.POST["added_by"]
-        file.file=request.FILES["myfile"]
-        # myfile=FileSystemStorage()
-        # myfile.save(file.file.name,file.file)
-        # file_size=get_human_readable_file_size(str("media/")+str(file.file.name))
-        file.file_size=""
-        file.save()
-        raw_data=Fyles.objects.all()
-        data=[[x.name,x.file.name,x.file.name[6:],x.added_by,x.date,x.file_size] for x in raw_data]
+        # form = FileUploadForm(request.POST, request.FILES)
+        # if form.is_valid():
+        #     # Save the form data, which includes name, added_by, and the file
+        #     form.save()
+
+            # Create a new Fyles instance with all data
+        file_model = Fyles(
+            # file=request.FILES['myfile'],
+            name=request.POST['name'],
+            added_by=request.POST['added_by'],
+        )
+
+            # Save the Fyles instance with updated data
+        file_model.save()
+
+            # Retrieve and prepare data for rendering
+        raw_data = Fyles.objects.all()
+        data=[[x.name,x.added_by,x.date] for x in raw_data]
         return render(request,"index.html",{"data":data})
     else:
-        return render(request,"/")
+        return render(request, "/")
+    return HttpResponse("Unexpected error")
+
+
+
+
+
+
+
+
+
+
+
+
 
 
