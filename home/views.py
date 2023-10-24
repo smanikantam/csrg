@@ -40,11 +40,11 @@ def upload_file(request):
         file=Fyles()
         file.name=request.POST["name"]
         file.added_by=request.POST["added_by"]
-        file.file=request.FILES["myfile"]
-        myfile=FileSystemStorage()
-        myfile.save(file.file.name,file.file)
-        file_size=get_human_readable_file_size(str("media/")+str(file.file.name))
-        file.file_size=file_size
+        file.file=request.FILES["myfile"].read()
+        # myfile=FileSystemStorage()
+        # myfile.save(file.file.name,file.file)
+        # file_size=get_human_readable_file_size(str("media/")+str(file.file.name))
+        file.file_size=""
         file.save()
         raw_data=Fyles.objects.all()
         data=[[x.name,x.file.name,x.file.name[6:],x.added_by,x.date,x.file_size] for x in raw_data]
