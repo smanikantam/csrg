@@ -39,20 +39,46 @@ def file_list(request):
 
 def upload_file(request):
     if request.method == 'POST':
-        form = FileFieldForm(request.POST, request.FILES)
+        # Use the form to handle file upload
+        form = Fyles.FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            file = form.cleaned_data['file']
-            file_model = Fyles(file=file,name=request.POST["name"],added_by=request.POST["added_by"])
-        # myfile=FileSystemStorage()
-        # myfile.save(file.file.name,file.file)
-        # file_size=get_human_readable_file_size(str("media/")+str(file.file.name))
-        file.file_size=""
-        file.save()
-        raw_data=Fyles.objects.all()
-        data=[[x.name,x.file.name,x.file.name[6:],x.added_by,x.date,x.file_size] for x in raw_data]
-        return render(request,"index.html",{"data":data})
+            # Save the form data
+            form.save()
+
+            # Get the uploaded file and other relevant data
+            uploaded_file = form.cleaned_data['file']
+            name = form.cleaned_data['name']
+            added_by = form.cleaned_data['added_by']
+
+            # You can calculate file size or perform other operations here
+            file_size = ""  # Calculate or set the file size as needed
+
+            # Create a new Fyles instance with all data
+            file_model = Fyles(
+                name=name,
+                date=None,  # Auto-generated date
+                added_by=added_by,
+                file=uploaded_file,
+                file_size=file_size
+            )
+
+            # Save the Fyles instance with updated data
+            file_model.save()
+
+            # Retrieve and prepare data for rendering
+            raw_data = Fyles.objects.all()
+            data = [[x.name, x.file.name, x.file.name[6:], x.added_by, x.date, x.file_size] for x in raw_data]
+
+            return render(request, "index.html", {"data": data})
     else:
-        form = FileFieldForm()
-        return render(request,"/")
+        form = Fyles.FileUploadForm()
+        return render(request, "upload_file.html", {"form": form})
+# Please note that this code saves the uploaded file through the form and then creates a new Fyles instance with the additional data before saving it.
+
+
+
+
+
+
 
 
