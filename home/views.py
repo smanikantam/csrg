@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.shortcuts import render
 from django.http import HttpResponse,FileResponse
-from .models import Fyles
+from .models import Fyles,FileUploadForm
 from django.core.files.storage import FileSystemStorage
 import os
 
@@ -39,26 +39,20 @@ def file_list(request):
 
 def upload_file(request):
     if request.method == 'POST':
-        # Use the form to handle file upload
-        form = Fyles.FileUploadForm(request.POST, request.FILES)
+        form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            # Save the form data
+            # Save the form data, which includes name, added_by, and the file
             form.save()
 
-            # Get the uploaded file and other relevant data
-            uploaded_file = form.cleaned_data['file']
-            name = form.cleaned_data['name']
-            added_by = form.cleaned_data['added_by']
-
-            # You can calculate file size or perform other operations here
+            # Calculate or set the file size as needed
             file_size = ""  # Calculate or set the file size as needed
 
             # Create a new Fyles instance with all data
             file_model = Fyles(
-                name=name,
+                name=form.cleaned_data['name'],
+                added_by=form.cleaned_data['added_by'],
                 date=None,  # Auto-generated date
-                added_by=added_by,
-                file=uploaded_file,
+                file=form.cleaned_data['file'],
                 file_size=file_size
             )
 
@@ -71,9 +65,14 @@ def upload_file(request):
 
             return render(request, "index.html", {"data": data})
     else:
-        form = Fyles.FileUploadForm()
+        form = FileUploadForm()
         return render(request, "upload_file.html", {"form": form})
-# Please note that this code saves the uploaded file through the form and then creates a new Fyles instance with the additional data before saving it.
+
+
+
+
+
+
 
 
 
