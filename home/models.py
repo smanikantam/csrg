@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 
 class Fyles(models.Model):
-    file = models.FileField(upload_to='media/')
+    file = models.FileField()
     name=models.CharField(max_length=255)
     date = models.DateField(auto_now_add=True)
     added_by=models.CharField(max_length=25)
