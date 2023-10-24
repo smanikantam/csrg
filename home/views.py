@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.forms import FileField
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 # Create your views here.
 from django.shortcuts import render
@@ -63,7 +64,7 @@ def upload_file(request):
             raw_data = Fyles.objects.all()
             data = [[x.name, x.file.name, x.file.name[6:], x.added_by, x.date, x.file_size] for x in raw_data]
 
-            return render(request, "/", {"data": data})
+            return HttpResponse("success")
     else:
         return render(request, "/")
 
