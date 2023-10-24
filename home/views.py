@@ -67,6 +67,7 @@ def upload_file(request):
             return HttpResponse("success")
     else:
         return render(request, "/")
+    return HttpResponse("Unexpected error")
 
 
 
