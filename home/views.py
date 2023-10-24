@@ -48,7 +48,7 @@ def upload_file(request):
 
             # Create a new Fyles instance with all data
         file_model = Fyles(
-            file=request.POST['myfile'],
+            file=request.FILES['myfile'],
             name=request.POST['name'],
             added_by=request.POST['added_by'],
             file_size=file_size
