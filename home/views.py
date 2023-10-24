@@ -29,8 +29,6 @@ def get_human_readable_file_size(file_path):
 
 def index(request):
     raw_data=Fyles.objects.all()
-    for i in raw_data:
-        print(i.file.name)
     data=[[x.name,x.added_by,x.date] for x in raw_data]
     return render(request,"index.html",{"data":data})
 
