@@ -63,7 +63,7 @@ def upload_file(request):
             raw_data = Fyles.objects.all()
             data = [[x.name, x.file.name, x.file.name[6:], x.added_by, x.date, x.file_size] for x in raw_data]
 
-            return render(request, "index.html", {"data": data})
+            return render(request, "/", {"data": data})
     else:
         return render(request, "/")
 
