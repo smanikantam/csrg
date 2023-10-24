@@ -44,15 +44,12 @@ def upload_file(request):
         if form.is_valid():
             # Save the form data, which includes name, added_by, and the file
             form.save()
-
-            # Calculate or set the file size as needed
-            file_size = ""  # Calculate or set the file size as needed
+            file_size = "" 
 
             # Create a new Fyles instance with all data
             file_model = Fyles(
-                name=form.cleaned_data['name'],
-                added_by=form.cleaned_data['added_by'],
-                date=None,  # Auto-generated date
+                name=request.POST['name'],
+                added_by=request.POST['added_by'],
                 file=form.cleaned_data['file'],
                 file_size=file_size
             )
@@ -63,8 +60,7 @@ def upload_file(request):
             # Retrieve and prepare data for rendering
             raw_data = Fyles.objects.all()
             data = [[x.name, x.file.name, x.file.name[6:], x.added_by, x.date, x.file_size] for x in raw_data]
-
-            return HttpResponse("success")
+            return render(request,"index.html",{"data":data})
     else:
         return render(request, "/")
     return HttpResponse("Unexpected error")
