@@ -31,7 +31,7 @@ def index(request):
     raw_data=Fyles.objects.all()
     for i in raw_data:
         print(i.file.name)
-    data=[[x.name,x.file.name,x.file.name[6:],x.added_by,x.date,x.file_size] for x in raw_data]
+    data=[[x.name,x.added_by,x.date] for x in raw_data]
     return render(request,"index.html",{"data":data})
 
 def file_list(request):
@@ -44,14 +44,12 @@ def upload_file(request):
         # if form.is_valid():
         #     # Save the form data, which includes name, added_by, and the file
         #     form.save()
-        file_size = "" 
 
             # Create a new Fyles instance with all data
         file_model = Fyles(
-            file=request.FILES['myfile'],
+            # file=request.FILES['myfile'],
             name=request.POST['name'],
             added_by=request.POST['added_by'],
-            file_size=file_size
         )
 
             # Save the Fyles instance with updated data
@@ -59,7 +57,7 @@ def upload_file(request):
 
             # Retrieve and prepare data for rendering
         raw_data = Fyles.objects.all()
-        data = [[x.name, x.file.name, x.file.name[6:], x.added_by, x.date, x.file_size] for x in raw_data]
+        data=[[x.name,x.added_by,x.date] for x in raw_data]
         return render(request,"index.html",{"data":data})
     else:
         return render(request, "/")
