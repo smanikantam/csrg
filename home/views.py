@@ -6,7 +6,7 @@ from django.http import HttpResponse
 # Create your views here.
 from django.shortcuts import render
 from django.http import HttpResponse,FileResponse
-from .models import Fyles,FileUploadForm
+from .models import Fyles
 from django.core.files.storage import FileSystemStorage
 import os
 
