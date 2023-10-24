@@ -40,27 +40,27 @@ def file_list(request):
 
 def upload_file(request):
     if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            # Save the form data, which includes name, added_by, and the file
-            form.save()
-            file_size = "" 
+        # form = FileUploadForm(request.POST, request.FILES)
+        # if form.is_valid():
+        #     # Save the form data, which includes name, added_by, and the file
+        #     form.save()
+        file_size = "" 
 
             # Create a new Fyles instance with all data
-            file_model = Fyles(
-                name=request.POST['name'],
-                added_by=request.POST['added_by'],
-                file=form.cleaned_data['file'],
-                file_size=file_size
-            )
+        file_model = Fyles(
+            file=request.POST["file"]
+            name=request.POST['name'],
+            added_by=request.POST['added_by'],
+            file_size=file_size
+        )
 
             # Save the Fyles instance with updated data
-            file_model.save()
+        file_model.save()
 
             # Retrieve and prepare data for rendering
-            raw_data = Fyles.objects.all()
-            data = [[x.name, x.file.name, x.file.name[6:], x.added_by, x.date, x.file_size] for x in raw_data]
-            return render(request,"index.html",{"data":data})
+        raw_data = Fyles.objects.all()
+        data = [[x.name, x.file.name, x.file.name[6:], x.added_by, x.date, x.file_size] for x in raw_data]
+        return render(request,"index.html",{"data":data})
     else:
         return render(request, "/")
     return HttpResponse("Unexpected error")
