@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.forms import FileField
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 from django.shortcuts import render
@@ -37,10 +39,10 @@ def file_list(request):
 
 def upload_file(request):
     if request.method == 'POST':
-        file=Fyles()
-        file.name=request.POST["name"]
-        file.added_by=request.POST["added_by"]
-        file.file=request.FILES["myfile"]
+        form = FileFieldForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = form.cleaned_data['file']
+            file_model = Fyles(file=file,name=request.POST["name"],added_by=request.POST["added_by"])
         # myfile=FileSystemStorage()
         # myfile.save(file.file.name,file.file)
         # file_size=get_human_readable_file_size(str("media/")+str(file.file.name))
@@ -50,6 +52,7 @@ def upload_file(request):
         data=[[x.name,x.file.name,x.file.name[6:],x.added_by,x.date,x.file_size] for x in raw_data]
         return render(request,"index.html",{"data":data})
     else:
+        form = FileFieldForm()
         return render(request,"/")
 
 
