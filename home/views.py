@@ -40,7 +40,7 @@ def upload_file(request):
         file=Fyles()
         file.name=request.POST["name"]
         file.added_by=request.POST["added_by"]
-        file.file=request.FILES["myfile"].read()
+        file.file=request.FILES["myfile"]
         # myfile=FileSystemStorage()
         # myfile.save(file.file.name,file.file)
         # file_size=get_human_readable_file_size(str("media/")+str(file.file.name))
