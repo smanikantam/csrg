@@ -65,8 +65,7 @@ def upload_file(request):
 
             return render(request, "index.html", {"data": data})
     else:
-        form = FileUploadForm()
-        return render(request, "upload_file.html", {"form": form})
+        return render(request, "/")
 
 
 
