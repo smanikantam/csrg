@@ -1,0 +1,146 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MyApp - To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .task {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        .task input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .task .task-text {
+            flex: 1;
+        }
+        .task .delete-btn {
+            color: red;
+            cursor: pointer;
+        }
+        td {
+			text-align: center;
+			padding: 10px;
+		}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MyApp - Add files</h1>
+        <div class="tasks">
+            <!-- Tasks will be dynamically added here -->
+        </div>
+        <table>
+            <th>
+                <th>Name</th>
+                <th>Added By</th>
+                <th>uplaod</th>
+            </th>
+            <hr>
+            <tr>
+                <div>
+                    <form action="upload_file" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <center>
+                            <td></td>
+                            <td><input type="text" placeholder="Name" name="name"><br></td>
+                            <td><input type="text" placeholder="Added By" name="added_by"><br></td>
+                            <td><input type="file" name="myfile"></td>
+                            <td><input type="submit"></td>
+                        </center>
+                    </form>
+                </div>
+            </tr>
+        </table>
+        
+        <br>
+        <hr>
+        <!-- <div class="add-task">
+            <input type="text" id="newTask" placeholder="Enter a new task">
+            <button id="addTaskBtn">Add Task</button>
+        </div> -->
+        <div style="align-items: center;">
+            <center>
+            <table style="align-items: center;">
+                <th>
+                    <th>Name</th>
+                    <th>File</th>
+                    <th>Added By</th>
+                    <th>Date</th>
+                    <th>Size</th>
+                </th>
+                {% for name,File,file_name,addby,date,size in data%}
+                <tr>
+                    <td></td>
+                    <td>{{name}}</td>
+                    <td><a href="{{File}}">{{file_name}}</a></td>
+                    <td>{{addby}}</td>
+                    <td>{{date}}</td>
+                    <td>{{size}}</td>
+                </tr>
+                {%endfor%}
+            </table>
+            </center>
+        </div>
+    </div>
+    
+    {% block body%}
+
+	{%endblock%}
+
+    <script>
+        function createTaskElement(text) {
+            const taskElement = document.createElement('div');
+            taskElement.className = 'task';
+            taskElement.innerHTML = `
+                <input type="checkbox">
+                <span class="task-text">${text}</span>
+                <span class="delete-btn" onclick="deleteTask(this)">Delete</span>
+            `;
+            return taskElement;
+        }
+    
+        function deleteTask(deleteBtn) {
+            const tasksContainer = document.querySelector('.tasks');
+            const taskElement = deleteBtn.closest('.task');
+            tasksContainer.removeChild(taskElement);
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const tasksContainer = document.querySelector('.tasks');
+            const addTaskBtn = document.querySelector('#addTaskBtn');
+            const newTaskInput = document.querySelector('#newTask');
+    
+            addTaskBtn.addEventListener('click', function() {
+                const taskText = newTaskInput.value.trim();
+                if (taskText !== '') {
+                    const taskElement = createTaskElement(taskText);
+                    tasksContainer.appendChild(taskElement);
+                    newTaskInput.value = '';
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>
