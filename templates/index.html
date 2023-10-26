@@ -34,7 +34,7 @@
         .task .task-text {
             flex: 1;
         }
-        .task .delete-btn {
+        .deletebtn {
             color: red;
             cursor: pointer;
         }
@@ -46,7 +46,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>MyApp - Add files</h1>
+        <h1>MyApp - Add app</h1>
         <div class="tasks">
             <!-- Tasks will be dynamically added here -->
         </div>
@@ -63,10 +63,9 @@
                         {% csrf_token %}
                         <center>
                             <td></td>
-                            <td><input type="text" placeholder="Name" name="name"><br></td>
-                            <td><input type="text" placeholder="Added By" name="added_by"><br></td>
-<!--                             <td><input type="file" name="myfile"></td> -->
-                            <td><input type="submit"></td>
+                            <td><input type="text" id="new_name" placeholder="Name" name="name"><br></td>
+                            <td><input type="text" id="new_addedby" placeholder="Added By" name="added_by"><br></td>
+                            <td><input id="uplaodbtn" type="submit"></td>
                         </center>
                     </form>
                 </div>
@@ -81,27 +80,27 @@
         </div> -->
         <div style="align-items: center;">
             <center>
-            <table style="align-items: center;">
-                <th>
-                    <th>Name</th>
-                    <th>File</th>
-                    <th>Added By</th>
-                    <th>Date</th>
-                    <th>Size</th>
-                </th>
-                {% for name,addby,date in data%}
-                <tr>
-                    <td></td>
-                    <td>{{name}}</td>
-			<td></td>
-<!--                     <td><a href="{{File}}">{{file_name}}</a></td> -->
-                    <td>{{addby}}</td>
-                    <td>{{date}}</td>
-<!--                     <td>{{size}}</td> --><td></td>
-                </tr>
-                {%endfor%}
-            </table>
+                <table style="align-items: center;">
+                    <th>
+                        <th>Name</th>
+                        <th>Added By</th>
+                        <th>Date</th>
+                        <th style="color: red;">Delete</th>
+                    </th>
+                    <div class="entries">
+                        {% for name,addby,date in data%}
+                            <tr class="entry">
+                                <td></td>
+                                <td>{{name}}</td>
+                                <td>{{addby}}</td>
+                                <td>{{date}}</td>
+                                <td><span onclick="delete_row(this)">Delete</span></td>
+                            </tr>
+                        {%endfor%}
+                    </div>
+                </table>
             </center>
+            
         </div>
     </div>
     
@@ -110,34 +109,68 @@
 	{%endblock%}
 
     <script>
-        function createTaskElement(text) {
-            const taskElement = document.createElement('div');
-            taskElement.className = 'task';
-            taskElement.innerHTML = `
-                <input type="checkbox">
-                <span class="task-text">${text}</span>
-                <span class="delete-btn" onclick="deleteTask(this)">Delete</span>
+        function createEntryElement(name,addedby) {
+            const entryElement = document.createElement('tr');
+            entryElement.className = 'entry';
+            entryElement.innerHTML = `
+            <td></td>
+            <td>${name}</td>
+            <td>${addby}</td>
+            <td>{{date}}</td>
+            <td><span onclick="delete_row(this)">Delete</span></td>
             `;
             return taskElement;
         }
     
-        function deleteTask(deleteBtn) {
-            const tasksContainer = document.querySelector('.tasks');
-            const taskElement = deleteBtn.closest('.task');
-            tasksContainer.removeChild(taskElement);
+        function delete_row(deleteBtn) {
+            const entryContainer = document.querySelector('.entries');
+            const entryElement = deleteBtn.closest('.entry');
+
+            // Create a form element
+            const deleteForm = document.createElement('form');
+            deleteForm.method = 'POST';
+            deleteForm.action = 'delete_entry';
+            deleteForm.innerHTML += '{% csrf_token %}';
+
+            // Create hidden input fields
+            const nameInput = document.createElement('input');
+            nameInput.type = 'hidden';
+            nameInput.name = 'deletion_name';
+            nameInput.value = entryElement.querySelector('td:nth-child(2)').textContent;
+
+            const addedbyInput = document.createElement('input');
+            addedbyInput.type = 'hidden';
+            addedbyInput.name = 'deletion_addedby';
+            addedbyInput.value = entryElement.querySelector('td:nth-child(3)').textContent;
+
+            // Append the input fields to the form
+            deleteForm.appendChild(nameInput);
+            deleteForm.appendChild(addedbyInput);
+
+            // Append the form to the document body
+            document.body.appendChild(deleteForm);
+
+            // Submit the form
+            deleteForm.submit();
+
+            // Remove the entry element from the DOM
+            entryContainer.removeChild(entryElement);
         }
     
         document.addEventListener('DOMContentLoaded', function() {
-            const tasksContainer = document.querySelector('.tasks');
-            const addTaskBtn = document.querySelector('#addTaskBtn');
-            const newTaskInput = document.querySelector('#newTask');
+            const EntryContainer = document.querySelector('.entries');
+            const addEntryBtn = document.querySelector('#uplaodbtn');
+            const newnameInput = document.querySelector('#new_name');
+            const newAddedbyInput = document.querySelector('#new_addedby');
     
-            addTaskBtn.addEventListener('click', function() {
-                const taskText = newTaskInput.value.trim();
-                if (taskText !== '') {
-                    const taskElement = createTaskElement(taskText);
-                    tasksContainer.appendChild(taskElement);
-                    newTaskInput.value = '';
+            addEntryBtn.addEventListener('click', function() {
+                const nameText = newnameInput.value.trim();
+                const addedbyText = newAddedbyInput.value.trim();
+                if (nameText !== '' && addedbyText!='') {
+                    const entryElement = createEntryElement(nameText,addedbyText);
+                    EntryContainer.appendChild(entryElement);
+                    nameText.value = '';
+                    addedbyText.value = '';
                 }
             });
         });
@@ -145,3 +178,6 @@
     
 </body>
 </html>
+
+
+
