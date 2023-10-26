@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.forms import FileField
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from django.db.models import Q
 
 # Create your views here.
 from django.shortcuts import render
@@ -60,6 +61,23 @@ def upload_file(request):
     else:
         return render(request, "/")
     return HttpResponse("Unexpected error")
+
+def delete_entry(request):
+    if request.method == 'POST':
+        name=request.POST["deletion_name"]
+        addedby=request.POST["deletion_addedby"]
+        try:
+            entries_to_delete = Fyles.objects.filter(name=name, added_by=addedby)
+            for entry in entries_to_delete:
+                entry.delete()
+        except Fyles.DoesNotExist:
+            pass 
+        print("deletion success")
+        raw_data = Fyles.objects.all()
+        data=[[x.name,x.added_by,x.date] for x in raw_data]
+        return render(request,"index.html",{"data":data})
+    else:
+        return render(request,"/")
 
 
 
