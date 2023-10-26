@@ -34,7 +34,7 @@
         .task .task-text {
             flex: 1;
         }
-        .deletebtn {
+        .delete-btn {
             color: red;
             cursor: pointer;
         }
@@ -94,7 +94,7 @@
                                 <td>{{name}}</td>
                                 <td>{{addby}}</td>
                                 <td>{{date}}</td>
-                                <td><span onclick="delete_row(this)">Delete</span></td>
+                                <td><span class="delete-btn" onclick="delete_row(this)">Delete</span></td>
                             </tr>
                         {%endfor%}
                     </div>
