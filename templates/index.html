@@ -8,6 +8,81 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
         }
+        /* Style for the navigation bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3498db; /* Choose your own color */
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        .navbar .brand {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .navbar .brand img {
+            width: 30px; /* Adjust the image size */
+            height: 30px; /* Adjust the image size */
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .navbar .menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .menu .profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .navbar .menu .profile img {
+            width: 30px; /* Adjust the image size */
+            height: 30px; /* Adjust the image size */
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .navbar .menu .profile .menu-dropdown {
+            display: none;
+            position: absolute;
+            background-color: #3498db; /* Choose your own color */
+            border-radius: 5px;
+            padding: 5px;
+            top: 100%; /* Position the dropdown below */
+            left: 0;
+            z-index: 1; /* Ensure it's on top of other content */
+        }
+
+        .navbar .menu .profile:hover .menu-dropdown {
+            display: block;
+        }
+
+        /* Style for the menu items in the dropdown */
+        .navbar .menu .profile .menu-dropdown a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin: 5px 0;
+        }
+
+        .navbar .menu .profile .menu-dropdown a i {
+            margin-right: 5px;
+        }
+
+        .navbar .menu a {
+            text-decoration: none;
+            color: #fff; /* Set link color */
+            margin: 0 10px; /* Add spacing between menu items */
+        }
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -28,9 +103,6 @@
             border-radius: 4px;
             background-color: #fff;
         }
-        .task input[type="checkbox"] {
-            margin-right: 10px;
-        }
         .task .task-text {
             flex: 1;
         }
@@ -38,15 +110,43 @@
             color: red;
             cursor: pointer;
         }
-        td {
+        td{
 			text-align: center;
-			padding: 10px;
+            padding: 10px;
+			padding-right: 40px;
+		}
+        th{
+			text-align: center;
+            padding: 10px;
+			padding-right: 40px;
 		}
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <a class="brand" href="#">
+            <img src="/media/usr1.jpg" alt="Brand Logo">
+            Brand
+        </a>
+        <div class="menu">
+            <a href="#">Help</a>
+            <a href="#">Dashboard</a>
+            <div class="profile">
+                <img src="/media/usr2.jpg" alt="User Profile">
+                <span>Username</span>
+                <div class="menu-dropdown">
+                    <a href="#"><i class="fa fa-user"></i> Account Details</a>
+                    <a href="#"><i class="fa fa-paint-brush"></i> Change Theme</a>
+                    <a href="#"><i class="fa fa-sign-out"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <h1>Add Files</h1>
+        <div class="tasks">
+            <!-- Tasks will be dynamically added here -->
+        </div>
         <table>
             <th>
                 <th>Name</th>
@@ -71,7 +171,10 @@
         
         <br>
         <hr>
-	    
+        <!-- <div class="add-task">
+            <input type="text" id="newTask" placeholder="Enter a new task">
+            <button id="addTaskBtn">Add Task</button>
+        </div> -->
         <div style="align-items: center;">
             <center>
                 <table style="align-items: center;">
@@ -79,7 +182,7 @@
                         <th>Name</th>
                         <th>Added By</th>
                         <th>Date</th>
-                        <th style="color: red;">Delete</th>
+                        <th></th>
                     </th>
                     <div class="entries">
                         {% for name,addby,date in data%}
