@@ -3,7 +3,7 @@ from django import forms
 
 class Fyles(models.Model):
     # file = models.FileField()
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=2000)
     date = models.DateField(auto_now_add=True)
     added_by = models.CharField(max_length=25)
     # file_size = models.CharField(max_length=25)
